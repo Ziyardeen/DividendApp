@@ -3,9 +3,9 @@ import fs from "fs";
 import request from "request";
 
 export async function fetchData(symbol, amount) {
-  ////
+  const apiKey = "KBSBILSE0WX749GS";
 
-  var url = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=KBSBILSE0WX749GS`;
+  var url = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${apiKey}`;
 
   request.get(
     {

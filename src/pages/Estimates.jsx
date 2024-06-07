@@ -18,7 +18,7 @@ const Estimates = () => {
                 </div>
 
                 <div className="main">
-                    <EstTable data = {data}/>
+                    <EstTable />
                 </div>
 
 

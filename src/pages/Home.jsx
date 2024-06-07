@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import Table from '../Components/Table'
 import { useNavigate,Link } from 'react-router-dom'
 import Sidebar from '../Components/Sidebar'
-
 import { getAllStocks, postStock } from '../../appwrite/appwrite.config'
-// import { fetchData } from '../../api-requests'
+
+
+ const stocksContext = React.createContext()
 
 
 
@@ -17,20 +18,20 @@ const Home = () => {
     
     useEffect(() => {
          getAllStocks().then((data) => {  
-             console.log(data,"HIIIIII")
+           
              setStocks(data)
          })
      
     },[isSubmitted])
 
-    console.log(symbol, amount)
+
 
 
 
 
     const handleStockChange = (e)=>{
 
-        setSymbol(e.target.value)
+        setSymbol(e.target.value.toUpperCase())
     }
     const handleAmountChange = (e)=>{
         setAmount(e.target.value)
@@ -49,9 +50,9 @@ const Home = () => {
           console.log(err)
         })
        
-
-
+        
     }
+    console.log(symbol,"ppppp")
   return (
     <div className="container">
         <Sidebar />

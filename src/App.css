@@ -1,74 +1,110 @@
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #2ecc71;
+  --background-light: #f0f0f0; /* Soft light grey */
+  --background-accent: #fafafa; /* Slightly warmer grey for accents */
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-light);
+  color: #333;
+}
 
 .container {
- 
   display: flex;
-  flex-direction:row;
-  width: 100vw;
-  height:100vh;
-  border: 2px solid rgb(244, 238, 238);
-  
+  flex-direction: column;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--background-accent); /* Using accent color for container */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 .side-bar {
-  border: 2px solid rgb(244, 238, 238);
-  width: 25vw;
-  height:100vh;
- 
+  background-color: var(--primary-color);
+  padding: 1em;
+}
+
+.side-bar nav a {
+  display: block;
+  padding: 1em 0;
+  color: white;
+  text-decoration: none;
+}
+
+.side-bar nav a:hover {
+  background-color: var(--secondary-color);
+  border-radius: 4px;
 }
 
 .content {
-  border: 2px solid rgb(244, 238, 238);
- display: flex;
- flex-direction: column;
- width: 75vw;
- height:vh;
- 
-
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
 }
 
-
-.top-bar {
-  border: 2px solid rgb(244, 238, 238);
-  width: 75vw;
-  height:25vh;
-
+.top-bar form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin-bottom: 1em;
 }
 
-.main {
-  border: 2px solid rgb(244, 238, 238);
-  width: 75vw;
-  height:75vh;
- 
+.top-bar label {
+  margin-right: 0.5em;
 }
 
-/* Table styling */
+.top-bar input {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #ffffff; /* White background for input */
+  color: #333;
+}
+
+.top-bar button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.top-bar button:hover {
+  background-color: var(--secondary-color);
+}
 
 .table-container {
-  padding: 20px;
-  max-width: 800px;
-  margin: auto;
+  overflow-x: auto;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 1em;
 }
 
-th, td {
-  padding: 10px;
+th,
+td {
+  padding: 0.75em;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
 th {
-  background-color: #f6b0b0;
+  background-color: var(--primary-color);
+  color: white;
 }
 
-tr:hover {
-  background-color: #f1f1f1;
-} 
-
-.rows{
-  border: solid black 2px;
-
-  width: 75%;
+tbody tr:nth-child(even) {
+  background-color: var(--background-accent); /* Using accent color for even rows */
 }

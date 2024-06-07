@@ -11,7 +11,7 @@ const Table = ({data,amount}) => {
         <table>
             <thead>
                 <tr>
-                    <th>Number</th>
+                    <th>Symbol</th>
                     <th>Name</th>
                     <th>Amount Owned</th>
                     <th>50 Day SMA</th>
@@ -27,7 +27,7 @@ const Table = ({data,amount}) => {
                 {data.map((row, index) => {
                  
                  return  <tr key={index} className='rows'>
-                            <td>{index+1}</td>
+                            <td>{row.Symbol}</td>
                             <td>{row.Name}</td>
                             <td>{row.amount}</td>
                             <td>{row["50DayMovingAverage"]}</td>
