@@ -5,7 +5,7 @@ import Sidebar from '../Components/Sidebar'
 import { getAllStocks, postStock } from '../../appwrite/appwrite.config'
 
 
- const stocksContext = React.createContext()
+ 
 
 
 
@@ -15,11 +15,14 @@ const Home = () => {
     const [stocks,setStocks] = useState([])
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [invalidStock,setInvalidStock] = useState(false)
+    const [isNotDividend,setIsNotDividend] = useState(false)
+
     
     useEffect(() => {
          getAllStocks().then((data) => {  
            
              setStocks(data)
+             setIsSubmitted(false)
          })
      
     },[isSubmitted])
@@ -40,19 +43,29 @@ const Home = () => {
     const handleSubmit = (e)=>{
         e.preventDefault()
         postStock(symbol,amount).then((data) => {
-            setIsSubmitted(!isSubmitted)
-            if(data === "Stock does not exist"){
-                    setInvalidStock(true)
+            console.log(data,"LLLLLLLLLLL")
+            setIsSubmitted(true)
+            
+            if(data === "Stock is not a dividend stock"){
+                    setIsNotDividend(true)
+                    setInvalidStock(false)
+                   
             }
-          console.log(data,"<><><><><><>")
-          console.log(invalidStock,"||||||<><><><><><>")
+            if(data === "Unable to fetch Price data to work with"){
+                    setIsNotDividend(false)
+                    setInvalidStock(true)
+                   
+            }
+
+          
         }).catch((err) => {
-          console.log(err)
+          console.log(err,"KKKKKKKK")
+          return
         })
        
         
     }
-    console.log(symbol,"ppppp")
+   
   return (
     <div className="container">
         <Sidebar />
@@ -71,8 +84,10 @@ const Home = () => {
             </div>
 
             <div className="main">
-                {invalidStock && <h1>Please Enter A Valid Stock Symbol OR Stock May Not Exist on the API</h1>}
-                {!invalidStock && <Table data = {stocks}/>}
+                
+                {isNotDividend && <h1>Stock is not a Dividend Stock</h1>}
+                {invalidStock && <h1>Unable to fetch Price data to work with</h1>}
+                {!isNotDividend && !invalidStock && <Table data = {stocks}/>}
             </div>
 
 

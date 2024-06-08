@@ -1,8 +1,8 @@
 :root {
   --primary-color: #4a90e2;
   --secondary-color: #2ecc71;
-  --background-light: #f0f0f0; /* Soft light grey */
-  --background-accent: #fafafa; /* Slightly warmer grey for accents */
+  --background-light: #f0f0f0; 
+  --background-accent: #fafafa; 
 }
 
 body {
@@ -13,12 +13,10 @@ body {
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
-  background-color: var(--background-accent); /* Using accent color for container */
+  background-color: var(--background-accent);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -31,7 +29,7 @@ body {
 
 .side-bar nav a {
   display: block;
-  padding: 1em 0;
+  padding: 1em 1rem;
   color: white;
   text-decoration: none;
 }
@@ -42,8 +40,6 @@ body {
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
   padding: 1em;
 }
 
@@ -59,10 +55,11 @@ body {
 }
 
 .top-bar input {
+  flex: 1;
   padding: 0.5em;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: #ffffff; /* White background for input */
+  background-color: #ffffff;
   color: #333;
 }
 
@@ -105,6 +102,13 @@ th {
   color: white;
 }
 
-tbody tr:nth-child(even) {
-  background-color: var(--background-accent); /* Using accent color for even rows */
+
+
+
+/* Media query for screens smaller than 768px (typical tablet size) */
+@media only screen and (max-width: 768px) {
+  .container {
+    width: 100%;
+    border-radius: 0;
+  }
 }

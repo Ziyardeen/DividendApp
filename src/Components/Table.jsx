@@ -1,10 +1,14 @@
 import React from 'react'
+import { deleteStock } from '../../appwrite/appwrite.config'
 
 const Table = ({data,amount}) => {
-    let currentDate = new Date()
-   currentDate =  currentDate.toISOString().split('T')[0]
 
-    console.log(currentDate)
+    const handleDelete = (row)=>{
+        console.log(row,"<<<<<<<<")
+        deleteStock(row.symbol)
+    }
+
+  
     
   return (
     <div className='table-container'>
@@ -14,10 +18,11 @@ const Table = ({data,amount}) => {
                     <th>Symbol</th>
                     <th>Name</th>
                     <th>Amount Owned</th>
-                    <th>50 Day SMA</th>
-                    <th>200 Day SMA</th>
-                    <th>Ex div Date</th>
+                    <th>Daily Average Price</th>
+                    <th>Ex-Dividend Date</th>
+                    <th>Nearest Pay Date</th>
                     <th>Dividend/Share</th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
@@ -27,13 +32,14 @@ const Table = ({data,amount}) => {
                 {data.map((row, index) => {
                  
                  return  <tr key={index} className='rows'>
-                            <td>{row.Symbol}</td>
-                            <td>{row.Name}</td>
+                            <td>{row.symbol}</td>
+                            <td>{row.name}</td>
                             <td>{row.amount}</td>
-                            <td>{row["50DayMovingAverage"]}</td>
-                            <td>{row["200DayMovingAverage"]}</td>
-                            <td>{row.DividendDate}</td>
-                            <td>{row. DividendPerShare}</td>
+                            <td>{row.dailyAverageStockPrice}</td>
+                            <td>{row.exdividendDate}</td>
+                            <td>{row.dividendPaymentDate}</td>
+                            <td>{row.dividendYield}</td>
+                            <td><button onClick={() => handleDelete(row)}>Delete</button></td>
                         </tr>
                 })}
             </tbody>

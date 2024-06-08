@@ -15,14 +15,15 @@ const EstTable = ({data}) => {
    },[])
 
     function estimate(row){
-        const estimatedStockPrice =(Number(row["50DayMovingAverage"])+ Number(row["200DayMovingAverage"]))/2
-        console.log(estimatedStockPrice)
-        const numberOfSharesOwned = row.amount / estimatedStockPrice
+        const estimatedStockPrice = row.dailyAverageStockPrice
 
-        const estimatedDividendByShares = numberOfSharesOwned * row.DividendPerShare
+        console.log(estimatedStockPrice)
+        const numberOfSharesOwned = row.amountOwned / estimatedStockPrice
+
+        const estimatedDividendByShares = numberOfSharesOwned * row.dividendYield
         
-        
-        const result =  estimatedDividendByShares * getRemainingDividendDates(row.DividendDate).length
+        const numberOfremainingDividends = getRemainingDividendDates(row.dividendPaymentDate)
+        const result =  estimatedDividendByShares * numberOfremainingDividends
 
         return parseFloat(result.toFixed(2))
     }
@@ -49,9 +50,9 @@ const EstTable = ({data}) => {
             {stocks.map((row, index) => {
              
              return  <tr key={index} className='rows'>
-                        <td>{row.Symbol}</td>
-                        <td>{row.Name}</td>
-                        <td>{row.amount}</td>
+                        <td>{row.symbol}</td>
+                        <td>{row.name}</td>
+                        <td>{row.amountOwned}</td>
                         <td>{estimate(row)}</td>
                        
                     </tr>

@@ -10,5 +10,5 @@ export function getRemainingDividendDates(lastDividendDateStr) {
     }
   }
 
-  return remainingDates;
+  return remainingDates.length;
 }
