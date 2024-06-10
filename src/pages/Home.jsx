@@ -3,6 +3,8 @@ import Table from '../Components/Table'
 import { useNavigate,Link } from 'react-router-dom'
 import Sidebar from '../Components/Sidebar'
 import { getAllStocks, postStock } from '../../appwrite/appwrite.config'
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 
  
@@ -16,16 +18,20 @@ const Home = () => {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [invalidStock,setInvalidStock] = useState(false)
     const [isNotDividend,setIsNotDividend] = useState(false)
+    const [notFound,setNotFound] = useState(false)
 
     
+   
+ 
     useEffect(() => {
+        toast('Component rendered');
          getAllStocks().then((data) => {  
            
              setStocks(data)
-             setIsSubmitted(false)
+             setIsSubmitted(true)
          })
      
-    },[isSubmitted])
+    },[isSubmitted,stocks])
 
 
 
@@ -39,11 +45,13 @@ const Home = () => {
     const handleAmountChange = (e)=>{
         setAmount(e.target.value)
     }
-
+    
+   
     const handleSubmit = (e)=>{
         e.preventDefault()
+
         postStock(symbol,amount).then((data) => {
-            console.log(data,"LLLLLLLLLLL")
+           
             setIsSubmitted(true)
             
             if(data === "Stock is not a dividend stock"){
@@ -59,7 +67,11 @@ const Home = () => {
 
           
         }).catch((err) => {
-          console.log(err,"KKKKKKKK")
+            console.log(typeof err.status,"KKKKKKKK")
+            if(err.status === 404){
+                console.log("hi");
+                setNotFound(true)
+            }
           return
         })
        
@@ -85,9 +97,10 @@ const Home = () => {
 
             <div className="main">
                 
+                {notFound && <h1>Stock connot be found on the Polygon API</h1>}
                 {isNotDividend && <h1>Stock is not a Dividend Stock</h1>}
                 {invalidStock && <h1>Unable to fetch Price data to work with</h1>}
-                {!isNotDividend && !invalidStock && <Table data = {stocks}/>}
+                {!isNotDividend && !invalidStock && !notFound && <Table data = {stocks}/>}
             </div>
 
 

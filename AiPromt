@@ -1,0 +1,88 @@
+Certainly! Here is an AI prompt you can use to generate a comprehensive stock report when provided with the relevant data:
+
+---
+
+**Prompt:**
+
+You are a financial analyst tasked with writing a comprehensive report on a selection of stocks. The data provided includes key financial metrics, company information, and dividend details. Using the structured data provided, write a detailed report covering the following sections:
+
+1. **Executive Summary**
+   - Provide a brief overview of the report's purpose and main findings.
+   - Summarize key metrics and insights about the stocks.
+
+2. **Introduction**
+   - Explain the goal of the report and what it intends to cover.
+   - Define the scope of the analysis, including the data sources and the stocks covered.
+
+3. **Company Profiles**
+   For each company, include:
+   - Symbol and Name
+   - Description of the company’s business activities
+   - Official website
+   - Industry and Sector
+   - Country of operation
+   - Company logo (if available)
+
+4. **Stock Ownership and Dividends**
+   For each stock, detail the following:
+   - Amount of shares owned
+   - Yearly estimated dividends based on ownership
+   - Current dividend yield
+   - Next dividend payment date
+   - Ex-dividend date
+
+5. **Financial Metrics**
+   - Present the daily average stock price
+   - Include other important financial metrics and ratios if available (e.g., P/E ratio, market cap)
+
+6. **Qualitative Analysis**
+   - Discuss recent performance highlights or issues
+   - Analyze current trends and outlook for the industry each company operates in
+   - Evaluate the company’s competitive positioning and strategic initiatives
+
+7. **Dividend Analysis**
+   - Discuss the stability and history of dividend payments
+   - Compare dividend yields and policies across the different stocks
+   - Analyze how dividends impact the overall return on investment
+
+8. **Risk Analysis**
+   - Identify market risks that could affect stock performance
+   - Highlight any specific risks related to the individual companies
+
+9. **Conclusion**
+   - Recap the key findings from the report
+   - Provide your investment outlook and any recommendations based on the analysis
+
+10. **Appendices**
+    - Include detailed tables with the data used for the analysis
+    - Provide visual representations of key data points and trends, such as charts and graphs
+
+### Example Data Structure:
+
+**estimatesTable:**
+- `symbol`: Stock ticker symbol
+- `name`: Company name
+- `amountOwned`: Number of shares owned
+- `YearlyEstimatedDividends`: Yearly estimated dividends
+
+**extractedInfo:**
+- `symbol`: Stock ticker symbol
+- `name`: Company name
+- `description`: Company description
+- `website`: Company website URL
+- `industry`: Industry of the company
+- `sector`: Sector of the company
+- `logo`: URL to the company logo
+- `country`: Country where the company is based
+- `dividendYield`: Dividend yield percentage
+- `dividendPaymentDate`: Next dividend payment date
+- `exdividendDate`: Ex-dividend date
+- `dailyAverageStockPrice`: Daily average stock price
+- `amountOwned`: Number of shares owned
+
+### Instructions:
+Using the provided data, write the report ensuring each section is thoroughly covered. Provide detailed analysis, visual aids where necessary, and clear explanations for all data points and metrics used. Your report should be structured professionally and be easy to follow for readers with varying levels of financial expertise.
+
+---
+
+Using this prompt, an AI would be able to generate a detailed and structured report on the given stocks. Make sure to input the actual data in the relevant sections to obtain a tailored report.

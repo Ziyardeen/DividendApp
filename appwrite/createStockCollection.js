@@ -3,16 +3,19 @@ import { Client, Databases, Permission, Role, ID } from "node-appwrite";
 // Initialize the Appwrite client
 const client = new Client();
 
+const project_id = import.meta.env.VITE_APPWRITE_PROJECT_ID;
+const appriteApiKey = import.meta.env.VITE_APPWRITE_API_KEY;
+const database_id = import.meta.env.VITE_DATABASE_ID;
+const collection_id = import.meta.env.VITE_COLLECTION_ID;
+
 client
   .setEndpoint("https://cloud.appwrite.io/v1")
-  .setProject("666183e1002d3cf3b829")
-  .setKey(
-    "07aa466394d21b888b3dba1a7326d3f025653f02440f1897b8e1c0397dc70ec42d2e85302703ccb94d656d8d351fca0ea5d21c7ff2ddea7735982cec8c7e7cbfc3d17841f9bba683c29f59c4059019474bf6dbd012a20d6636fb33824ea6786c5db5c625b54e374bf522dc0b74579678c9d4f61b0c25cf8f1b1974274bf4d95a"
-  );
+  .setProject(project_id)
+  .setKey(appriteApiKey);
 
 const databases = new Databases(client);
-const databaseId = "666184c10039a2c4610f";
-const collectionId = "6664442e001e5afe34a2";
+const databaseId = database_id;
+const collectionId = collection_id;
 
 const attributes = [
   { key: "symbol", type: "string" },

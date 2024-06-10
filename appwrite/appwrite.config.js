@@ -1,21 +1,21 @@
-import { Client, Databases, ID } from "appwrite";
-import axios from "axios";
-import { getStockInfo } from "../api-requests";
+import { Client, Databases } from "appwrite";
+
+import { getStockInfo } from "../api-requests.js";
+
+const project_id = import.meta.env.VITE_APPWRITE_PROJECT_ID;
+const database_id = import.meta.env.VITE_DATABASE_ID;
+const stocksDataCollection_id = import.meta.env.VITE_COLLECTION_ID;
 
 const client = new Client()
   .setEndpoint("https://cloud.appwrite.io/v1")
-  .setProject("666183e1002d3cf3b829");
+  .setProject(project_id);
 
 const databases = new Databases(client);
 
-const database_id = "666184c10039a2c4610f";
-const stocksDataCollection_id = "6664442e001e5afe34a2";
-const stocksEstimateCllection_id = "";
-
 export async function postStock(symbol, amount) {
-  console.log(typeof amount, "<<<<<<<<Amount");
   try {
     const stocksOverview = await getStockInfo(symbol, parseFloat(amount));
+
     if (stocksOverview === "Stock is not a dividend stock") {
       return stocksOverview;
     }
@@ -31,18 +31,16 @@ export async function postStock(symbol, amount) {
         stocksOverview
       )
       .then((data) => {
-        console.log(data);
         return data;
       })
       .catch((err) => {
-        console.log(err);
         return err;
       });
   } catch (error) {
     if (error.response) {
-      console.log("Status:", error.response.status);
+      throw error.response;
     } else {
-      console.log("Error:", error.message);
+      throw error.message;
     }
   }
 }
@@ -54,7 +52,6 @@ export function getAllStocks() {
       return response.documents;
     })
     .catch((error) => {
-      console.log(error);
       return error;
     });
 }
@@ -67,7 +64,21 @@ export async function deleteStock(symbol) {
   );
 }
 
-///
+export async function getSpecificStock(symbol) {
+  const result = await databases.getDocument(
+    database_id,
+    stocksDataCollection_id,
+    symbol
+  );
 
-// getAllStocks();
-// postStock("PG", 100);
+  return result;
+}
+
+export async function UpdateStockWithEstimate(symbol, estimate) {
+  const result = await databases.updateDocument(
+    database_id,
+    stocksDataCollection_id,
+    symbol,
+    { yearlyDividendEstimate: estimate }
+  );
+}

@@ -4,7 +4,7 @@ import { deleteStock } from '../../appwrite/appwrite.config'
 const Table = ({data,amount}) => {
 
     const handleDelete = (row)=>{
-        console.log(row,"<<<<<<<<")
+       
         deleteStock(row.symbol)
     }
 
@@ -34,12 +34,12 @@ const Table = ({data,amount}) => {
                  return  <tr key={index} className='rows'>
                             <td>{row.symbol}</td>
                             <td>{row.name}</td>
-                            <td>{row.amount}</td>
+                            <td>{row.amountOwned}</td>
                             <td>{row.dailyAverageStockPrice}</td>
                             <td>{row.exdividendDate}</td>
                             <td>{row.dividendPaymentDate}</td>
                             <td>{row.dividendYield}</td>
-                            <td><button onClick={() => handleDelete(row)}>Delete</button></td>
+                            <td><button id="delete-btn" onClick={() => handleDelete(row)}>Delete</button></td>
                         </tr>
                 })}
             </tbody>

@@ -1,24 +1,33 @@
 import React, { useState,useEffect } from 'react'
 import { getRemainingDividendDates } from '../../util'
-import { getAllStocks } from '../../appwrite/appwrite.config'
+import { UpdateStockWithEstimate, getAllStocks } from '../../appwrite/appwrite.config'
+import  getExchangeRate from '../../currency-convertor'
 
 
-const EstTable = ({data}) => {
+
+const EstTable = () => {
     const[stocks, setStocks] = useState([])
+    const[gbpToUsd, setgbpToUsd] = useState(1.27)
 
     useEffect(() => {
         getAllStocks().then((data) => {  
             
             setStocks(data)
+            getExchangeRate("GBP","USD").then((rate) => {
+                setgbpToUsd(rate)
+             
+            })
         })
     
    },[])
 
-    function estimate(row){
-        const estimatedStockPrice = row.dailyAverageStockPrice
+   
 
-        console.log(estimatedStockPrice)
-        const numberOfSharesOwned = row.amountOwned / estimatedStockPrice
+    function estimate(row){
+        const estimatedStockPrice = row.dailyAverageStockPrice 
+
+       
+        const numberOfSharesOwned = (row.amountOwned * gbpToUsd) / estimatedStockPrice
 
         const estimatedDividendByShares = numberOfSharesOwned * row.dividendYield
         
@@ -38,8 +47,8 @@ const EstTable = ({data}) => {
             <tr>
                 <th>Symbol</th>
                 <th>Name</th>
-                <th>Amount Owned</th>
-                <th>Remainning Yearly Dividend Estimate</th>
+                <th className='table-center-align'>Amount Owned in USD</th>
+                <th className='table-center-align'>Remainning Yearly Dividend Estimate in USD</th>
             </tr>
             
         </thead>
@@ -48,19 +57,22 @@ const EstTable = ({data}) => {
 
         <tbody>
             {stocks.map((row, index) => {
+                
+                console.log(row.symbol,estimate(row));
+                UpdateStockWithEstimate(row.symbol,estimate(row))
              
              return  <tr key={index} className='rows'>
                         <td>{row.symbol}</td>
                         <td>{row.name}</td>
-                        <td>{row.amountOwned}</td>
-                        <td>{estimate(row)}</td>
+                        <td className='table-center-align'>{row.amountOwned * gbpToUsd}</td>
+                        <td className='table-center-align'>{row.yearlyDividendEstimate}</td>
                        
                     </tr>
             })}
 
                     <tr>
                         <td colSpan="3"></td>
-                        <td>Total: {totalRemainingYearlyDividend.toFixed(2)}</td>
+                        <td className='table-center-align'>Total: {totalRemainingYearlyDividend.toFixed(2)}</td>
                     </tr>
         </tbody>
 

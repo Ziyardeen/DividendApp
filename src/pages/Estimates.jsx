@@ -14,7 +14,7 @@ const Estimates = () => {
             <div className="content">
 
                 <div className="top-bar">
-                   <h1>ESTIMATES</h1>
+                   <h1 className='table-center-align'>ESTIMATES</h1>
                 </div>
 
                 <div className="main">
