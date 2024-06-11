@@ -34,6 +34,7 @@ const Home = () => {
         e.preventDefault();
         try {
             const data = await postStock(symbol, amount);
+            console.log(data,"VVVVVVVV");
             if (data === "Stock is not a dividend stock") {
                 toast.error('Stock is not a Dividend Stock', {
                     position: "top-center",
@@ -58,7 +59,20 @@ const Home = () => {
                     theme: "colored",
                     transition: Bounce,
                 });
-            } else {
+            } else if (data === "Unable to fetch Price data to work with") {
+                toast.error('Unable to fetch Price data to work with', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            }
+             else {
                 await fetchStocks(); 
                 toast.success('Stock added successfully!', {
                     position: "top-center",
@@ -73,6 +87,7 @@ const Home = () => {
                 });
             }
         } catch (err) {
+            console.log(err,"<<<<<<<<<");
             if (err.status === 404) {
                 toast.error('Stock cannot be found on the Polygon API', {
                     position: "top-center",
@@ -84,7 +99,46 @@ const Home = () => {
                     progress: undefined,
                     theme: "colored",
                     transition: Bounce,
-                });
+                })
+            }
+            else if(err.code === 409){
+                toast.error('Stock Already Exist', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                })
+            }
+            else if(err.status === 429){
+                toast.error('Error: TOO MANY REQUESTS, Please try Again', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                })
+            }
+            else {
+                toast.error('Error', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                })
             }
         }
     };

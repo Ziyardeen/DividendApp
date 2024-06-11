@@ -58,7 +58,7 @@ const EstTable = () => {
         <tbody>
             {stocks.map((row, index) => {
                 
-                console.log(row.symbol,estimate(row));
+                
                 UpdateStockWithEstimate(row.symbol,estimate(row))
              
              return  <tr key={index} className='rows'>

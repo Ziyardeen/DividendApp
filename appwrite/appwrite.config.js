@@ -23,20 +23,24 @@ export async function postStock(symbol, amount) {
       return stocksOverview;
     }
 
-    databases
-      .createDocument(
-        database_id,
-        stocksDataCollection_id,
-        stocksOverview.symbol,
-        stocksOverview
-      )
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => {
-        return err;
-      });
+    const data = await databases.createDocument(
+      database_id,
+      stocksDataCollection_id,
+      stocksOverview.symbol,
+      stocksOverview
+    );
+
+    console.log(data, "XXXXXX");
+    return data;
+    // .then((data) => {
+
+    // })
+    // .catch((err) => {
+    //   console.log(err, "HHHHHHHHH");
+    //   throw err;
+    // });
   } catch (error) {
+    console.log(error, "WWWWWWWW");
     if (error.response) {
       throw error.response;
     } else {
