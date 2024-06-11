@@ -1,112 +1,133 @@
-import React, { useEffect, useState } from 'react'
-import Table from '../Components/Table'
-import { useNavigate,Link } from 'react-router-dom'
-import Sidebar from '../Components/Sidebar'
-import { getAllStocks, postStock } from '../../appwrite/appwrite.config'
-import { ToastContainer, toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
-
-
- 
-
-
+import React, { useEffect, useState } from 'react';
+import Table from '../Components/Table';
+import { deleteStock, getAllStocks, postStock } from '../../appwrite/appwrite.config';
+import Sidebar from '../Components/Sidebar';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
-    const [symbol, setSymbol] = useState('')
-    const [amount, setAmount] = useState()
-    const [stocks,setStocks] = useState([])
-    const [isSubmitted, setIsSubmitted] = useState(false)
-    const [invalidStock,setInvalidStock] = useState(false)
-    const [isNotDividend,setIsNotDividend] = useState(false)
-    const [notFound,setNotFound] = useState(false)
+    const [symbol, setSymbol] = useState('');
+    const [amount, setAmount] = useState('');
+    const [stocks, setStocks] = useState([]);
+    const [loading, setLoading] = useState(true); // Add loading state
 
-    
-   
- 
+    const fetchStocks = async () => {
+        setLoading(true); // Set loading to true while fetching
+        const data = await getAllStocks();
+        setStocks(data);
+        setLoading(false); // Set loading to false after fetching
+    };
+
     useEffect(() => {
-        toast('Component rendered');
-         getAllStocks().then((data) => {  
-           
-             setStocks(data)
-             setIsSubmitted(true)
-         })
-     
-    },[isSubmitted,stocks])
+        fetchStocks();
+    }, []);
 
+    const handleStockChange = (e) => {
+        setSymbol(e.target.value.toUpperCase());
+    };
 
+    const handleAmountChange = (e) => {
+        setAmount(e.target.value);
+    };
 
-
-
-
-    const handleStockChange = (e)=>{
-
-        setSymbol(e.target.value.toUpperCase())
-    }
-    const handleAmountChange = (e)=>{
-        setAmount(e.target.value)
-    }
-    
-   
-    const handleSubmit = (e)=>{
-        e.preventDefault()
-
-        postStock(symbol,amount).then((data) => {
-           
-            setIsSubmitted(true)
-            
-            if(data === "Stock is not a dividend stock"){
-                    setIsNotDividend(true)
-                    setInvalidStock(false)
-                   
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const data = await postStock(symbol, amount);
+            if (data === "Stock is not a dividend stock") {
+                toast.error('Stock is not a Dividend Stock', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            } else if (data === "Unable to fetch Price data to work with") {
+                toast.error('Unable to fetch Price data to work with', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
+            } else {
+                await fetchStocks(); 
+                toast.success('Stock added successfully!', {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
             }
-            if(data === "Unable to fetch Price data to work with"){
-                    setIsNotDividend(false)
-                    setInvalidStock(true)
-                   
+        } catch (err) {
+            if (err.status === 404) {
+                toast.error('Stock cannot be found on the Polygon API', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    transition: Bounce,
+                });
             }
+        }
+    };
 
-          
-        }).catch((err) => {
-            console.log(typeof err.status,"KKKKKKKK")
-            if(err.status === 404){
-                console.log("hi");
-                setNotFound(true)
-            }
-          return
-        })
-       
-        
-    }
-   
-  return (
-    <div className="container">
-        <Sidebar />
-        
-        <div className="content">
+    const handleDelete = async (symbol) => {
+        await deleteStock(symbol);
+        await fetchStocks(); 
+    };
 
-            <div className="top-bar">
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="stock">Stock Symbol</label>
-                    <input id='stock' type="text" required onChange={handleStockChange}/>
-                    <label htmlFor="amount">Amount owned</label>
-                    <input id='amount' type="number" step="any" required onChange={handleAmountChange}/>
-                    <button>Submit</button>
-                </form>
-            
+    if (loading) return <div>Loading...</div>; 
+
+    return (
+        <div className="container">
+            <Sidebar />
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+                transition={Bounce}
+            />
+            <div className="content">
+                <div className="top-bar">
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="stock">Stock Symbol</label>
+                        <input id='stock' type="text" required onChange={handleStockChange} />
+                        <label htmlFor="amount">Amount owned</label>
+                        <input id='amount' type="number" step="any" required onChange={handleAmountChange} />
+                        <button>Submit</button>
+                    </form>
+                </div>
+                <div className="main">
+                    <Table data={stocks} handleDelete={handleDelete} />
+                </div>
             </div>
-
-            <div className="main">
-                
-                {notFound && <h1>Stock connot be found on the Polygon API</h1>}
-                {isNotDividend && <h1>Stock is not a Dividend Stock</h1>}
-                {invalidStock && <h1>Unable to fetch Price data to work with</h1>}
-                {!isNotDividend && !invalidStock && !notFound && <Table data = {stocks}/>}
-            </div>
-
-
         </div>
-    </div>
-  )
-}
+    );
+};
 
-export default Home
+export default Home;
