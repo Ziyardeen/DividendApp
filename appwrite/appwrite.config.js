@@ -30,17 +30,8 @@ export async function postStock(symbol, amount) {
       stocksOverview
     );
 
-    console.log(data, "XXXXXX");
     return data;
-    // .then((data) => {
-
-    // })
-    // .catch((err) => {
-    //   console.log(err, "HHHHHHHHH");
-    //   throw err;
-    // });
   } catch (error) {
-    console.log(error, "WWWWWWWW");
     if (error.response) {
       throw error.response;
     } else {

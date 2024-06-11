@@ -9,13 +9,13 @@ const Home = () => {
     const [symbol, setSymbol] = useState('');
     const [amount, setAmount] = useState('');
     const [stocks, setStocks] = useState([]);
-    const [loading, setLoading] = useState(true); // Add loading state
+    const [loading, setLoading] = useState(true); 
 
     const fetchStocks = async () => {
-        setLoading(true); // Set loading to true while fetching
+        setLoading(true); 
         const data = await getAllStocks();
         setStocks(data);
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false); 
     };
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const Home = () => {
         e.preventDefault();
         try {
             const data = await postStock(symbol, amount);
-            console.log(data,"VVVVVVVV");
+            
             if (data === "Stock is not a dividend stock") {
                 toast.error('Stock is not a Dividend Stock', {
                     position: "top-center",
@@ -87,7 +87,7 @@ const Home = () => {
                 });
             }
         } catch (err) {
-            console.log(err,"<<<<<<<<<");
+            
             if (err.status === 404) {
                 toast.error('Stock cannot be found on the Polygon API', {
                     position: "top-center",
@@ -171,7 +171,7 @@ const Home = () => {
                     <form onSubmit={handleSubmit}>
                         <label htmlFor="stock">Stock Symbol</label>
                         <input id='stock' type="text" required onChange={handleStockChange} />
-                        <label htmlFor="amount">Amount owned</label>
+                        <label htmlFor="amount">Amount owned (GBP)</label>
                         <input id='amount' type="number" step="any" required onChange={handleAmountChange} />
                         <button>Submit</button>
                     </form>

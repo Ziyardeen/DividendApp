@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import { deleteStock } from '../../appwrite/appwrite.config';
+import getExchangeRate from '../../currency-convertor';
+
 
 const Table = ({ data, handleDelete }) => {
+    const[gbpToUsd, setgbpToUsd] = useState(1.27)
+
+   
+
+
+    useEffect(() => {
+        getExchangeRate("GBP","USD").then((rate) => {
+            setgbpToUsd(rate)
+         
+        })
+        
+      
+    },[])
+
+
     return (
         <div className='table-container'>
             <table>
@@ -9,7 +26,7 @@ const Table = ({ data, handleDelete }) => {
                     <tr>
                         <th>Symbol</th>
                         <th>Name</th>
-                        <th>Amount Owned</th>
+                        <th>Amount Owned in USD</th>
                         <th>Daily Average Price</th>
                         <th>Ex-Dividend Date</th>
                         <th>Nearest Pay Date</th>
@@ -22,7 +39,7 @@ const Table = ({ data, handleDelete }) => {
                         <tr key={row.symbol} className='rows'>
                             <td>{row.symbol}</td>
                             <td>{row.name}</td>
-                            <td>{row.amountOwned}</td>
+                            <td>{(parseFloat(row.amountOwned*gbpToUsd).toFixed(2))}</td>
                             <td>{row.dailyAverageStockPrice}</td>
                             <td>{row.exdividendDate}</td>
                             <td>{row.dividendPaymentDate}</td>
