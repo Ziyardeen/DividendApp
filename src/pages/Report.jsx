@@ -14,9 +14,7 @@ useEffect(() => {
   })
 },[])
 
-const handleGenerate = ()=>{
- 
-}
+
 
 
   return (

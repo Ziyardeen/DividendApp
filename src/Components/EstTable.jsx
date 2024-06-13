@@ -65,7 +65,7 @@ const EstTable = () => {
                         <td>{row.symbol}</td>
                         <td>{row.name}</td>
                         <td className='table-center-align'>{(parseFloat(row.amountOwned*gbpToUsd).toFixed(2))}</td>
-                        <td className='table-center-align'>{row.yearlyDividendEstimate}</td>
+                        <td className='table-center-align'>{estimate(row)}</td>
                        
                     </tr>
             })}

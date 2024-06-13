@@ -76,4 +76,5 @@ export async function UpdateStockWithEstimate(symbol, estimate) {
     symbol,
     { yearlyDividendEstimate: estimate }
   );
+  return result;
 }

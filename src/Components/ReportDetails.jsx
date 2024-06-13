@@ -33,8 +33,8 @@ const ReportDetails = () => {
  
         {Loading? <div className='loader-container'>
             <CirclesWithBar
-            height="500"
-            width="500"
+            height="400"
+            width="400"
             color="#4fa94d"
             outerCircleColor="#4fa94d"
             innerCircleColor="#4fa94d"
