@@ -1,4 +1,4 @@
-import { Client, Databases } from "appwrite";
+import { Client, Databases, Query } from "appwrite";
 
 import { getStockInfo } from "../api-requests.js";
 
@@ -60,13 +60,20 @@ export async function deleteStock(symbol) {
 }
 
 export async function getSpecificStock(symbol) {
-  const result = await databases.getDocument(
+  // Older records were saved with generated document IDs rather than the
+  // symbol itself, so look up by the `symbol` field instead of assuming
+  // $id === symbol.
+  const response = await databases.listDocuments(
     database_id,
     stocksDataCollection_id,
-    symbol
+    [Query.equal("symbol", symbol), Query.orderDesc("$createdAt"), Query.limit(1)]
   );
 
-  return result;
+  if (response.documents.length === 0) {
+    throw new Error(`No stock data found for symbol ${symbol}`);
+  }
+
+  return response.documents[0];
 }
 
 export async function UpdateStockWithEstimate(symbol, estimate) {

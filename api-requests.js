@@ -1,17 +1,12 @@
 import axios from "axios";
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getSpecificStock } from "./appwrite/appwrite.config.js";
 
 const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
 const polygonKey = import.meta.env.VITE_POLYGON_API_KEY;
-
-// Access your API key as an environment variable (see "Set up your API key" above)
-// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const genAI = new GoogleGenerativeAI(geminiKey);
-
-// The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+// Note: the Google Generative AI SDK is not imported at module-level to avoid
+// bundler/runtime issues in the browser. If a Gemini API key is available and
+// the environment supports it, the SDK will be dynamically imported at runtime.
 
 export const getStockInfo = async (ticker, amount) => {
   const apiKey = polygonKey;
@@ -89,77 +84,76 @@ export const generateAIreport = async (symbol) => {
       return err;
     });
 
-  async function run() {
-    const prompt = `You are a financial analyst tasked with writing a comprehensive report on a selection of stocks. The data provided includes key financial metrics, company information, and dividend details. Using the structured data provided, write a detailed report covering the following sections:
-        Data Structure:
-        ${JSON.stringify(dataStructure)}
+  function buildLocalReport(d) {
+    if (!d || d instanceof Error)
+      return `<p>No data available for ${symbol}</p>`;
 
-        Instructions:
-        Using the provided data, write the report ensuring each section is thoroughly covered. Provide detailed analysis, visual aids where necessary, and clear explanations for all data points and metrics used. Your report should be structured professionally and be easy to follow for readers with varying levels of financial expertise. provide the data provided below. Place your findings in appropriate HTML tags for rendering as this will be presented on a website.eg h1,p, img, a, etc.
-    
-        1. Executive Summary
-           - Provide a brief overview of the report's purpose and main findings.
-           - Summarize key metrics and insights about the stocks.
-        
-        2. Introduction
-           - Explain the goal of the report and what it intends to cover.
-           - Define the scope of the analysis, including the data sources and the stocks covered.
-        
-        3. Company Profiles
-           For each company, include:
-           - Symbol and Name
-           - Description of the company’s business activities
-           - Official website
-           - Industry and Sector
-           - Country of operation
-           - Company logo (if available)
-        
-        4. Stock Ownership and Dividends
-           For each stock, detail the following:
-           - Amount of shares owned
-           - Yearly estimated dividends based on ownership
-           - Current dividend yield
-           - Next dividend payment date
-           - Ex-dividend date
-        
-        5. Financial Metrics
-           - Present the daily average stock price
-           - Include other important financial metrics and ratios if available (e.g., P/E ratio, market cap)
-        
-        6. Qualitative Analysis
-           - Discuss recent performance highlights or issues
-           - Analyze current trends and outlook for the industry each company operates in
-           - Evaluate the company’s competitive positioning and strategic initiatives
-        
-        7. Dividend Analysis
-           - Discuss the stability and history of dividend payments
-           - Compare dividend yields and policies across the different stocks
-           - Analyze how dividends impact the overall return on investment
-        
-        8. Risk Analysis
-           - Identify market risks that could affect stock performance
-           - Highlight any specific risks related to the individual companies
-        
-        9. Conclusion
-           - Recap the key findings from the report
-           - Provide your investment outlook and any recommendations based on the analysis
-        
-        10. Appendices
-            - Include detailed tables with the data used for the analysis
+    const safe = (v) => (v === undefined || v === null ? "N/A" : v);
 
-        11. Add a disclaimer  
-        `;
+    return `
+      <div class="ai-report">
+        <h1>Report: ${safe(d.name)} (${safe(d.symbol)})</h1>
+        ${d.logo ? `<img src="${d.logo}" alt="${safe(d.name)} logo" style="max-width:200px;"/>` : ""}
+        <p><strong>Website:</strong> <a href="${safe(d.website)}" target="_blank" rel="noreferrer">${safe(d.website)}</a></p>
+        <h2>Executive Summary</h2>
+        <p>${safe(d.description)}</p>
 
-    // const prompt = "Write a story about a magic backpack.";
+        <h2>Ownership & Dividends</h2>
+        <ul>
+          <li><strong>Amount Owned:</strong> ${safe(d.amountOwned)}</li>
+          <li><strong>Estimated Yearly Dividends:</strong> ${safe(d.yearlyDividendEstimate)}</li>
+          <li><strong>Dividend Yield:</strong> ${safe(d.dividendYield)}</li>
+          <li><strong>Next Payment Date:</strong> ${safe(d.dividendPaymentDate)}</li>
+          <li><strong>Ex-dividend Date:</strong> ${safe(d.exdividendDate)}</li>
+        </ul>
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+        <h2>Financial Metrics</h2>
+        <p><strong>Daily Average Price:</strong> $${safe(d.dailyAverageStockPrice)}</p>
 
-    return text;
+        <h2>Company Profile</h2>
+        <p><strong>Industry:</strong> ${safe(d.industry)} — <strong>Sector:</strong> ${safe(d.sector)}</p>
+        <p><strong>Country:</strong> ${safe(d.country)}</p>
+
+        <h2>Qualitative Notes</h2>
+        <p>The AI-generated analysis is temporarily unavailable, so this is a basic summary of your stored data. Refresh this page in a few minutes to try again.</p>
+
+        <h2>Disclaimer</h2>
+        <p>This report is for informational purposes only and not financial advice.</p>
+      </div>
+    `;
   }
 
-  const reportText = await run();
+  // Try to use Gemini SDK if an API key is available. Fall back to local HTML when
+  // the SDK isn't available or an error occurs (this avoids bundler/runtime failures).
+  async function run() {
+    if (geminiKey) {
+      try {
+        const ga = await import("@google/generative-ai");
+        const { GoogleGenerativeAI } = ga;
+        const genAI = new GoogleGenerativeAI(geminiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
-  return reportText;
+        const prompt = `You are a financial analyst writing a stock report. Data: ${JSON.stringify(dataStructure)}
+
+Write the report as a single HTML fragment (no <html>, <head>, <body>, <style>, or <script> tags, and no inline "style" attributes) wrapped in one <div class="ai-report">. Use only these tags for structure and formatting: h1, h2, h3, p, ul, ol, li, table, thead, tbody, tr, th, td, a, strong, em, img. Do not add class attributes to any tag other than the outer wrapper. Cover: company overview, ownership & dividends, financial metrics, qualitative analysis, and a brief disclaimer. Output only the HTML fragment, nothing else.`;
+
+        const result = await model.generateContent(prompt);
+        const response = result.response;
+        const text = response.text();
+        // Gemini sometimes wraps HTML output in a markdown code fence; strip it
+        // so the raw fence markers don't render as literal text.
+        return text.replace(/^```(?:html)?\s*/i, "").replace(/```\s*$/, "");
+      } catch (err) {
+        console.warn(
+          "Gemini SDK generation failed, falling back to local report:",
+          err,
+        );
+      }
+    }
+
+    // Fallback local report
+    return buildLocalReport(dataStructure);
+  }
+
+  return await run();
 };

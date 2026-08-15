@@ -152,6 +152,74 @@ CustomLoader.css */
   padding: 0 10px;
 }
 
+.ai-report {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: var(--background-accent);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 32px 40px;
+}
+
+.ai-report h1 {
+  color: var(--primary-color);
+  margin-top: 0;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 12px;
+}
+
+.ai-report h2 {
+  color: var(--primary-color);
+  margin-top: 32px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.ai-report h3 {
+  color: #333;
+  margin-top: 20px;
+}
+
+.ai-report p, .ai-report li {
+  line-height: 1.6;
+  color: #333;
+}
+
+.ai-report ul, .ai-report ol {
+  padding-left: 24px;
+}
+
+.ai-report li {
+  margin-bottom: 6px;
+}
+
+.ai-report img {
+  max-width: 200px;
+  display: block;
+  margin: 12px 0;
+}
+
+.ai-report a {
+  color: var(--primary-color);
+}
+
+.ai-report table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.ai-report th, .ai-report td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.ai-report th {
+  background-color: var(--primary-color);
+  color: white;
+}
+
 
 
 /* Estimates */
